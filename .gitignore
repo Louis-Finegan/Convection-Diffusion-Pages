@@ -1,0 +1,41 @@
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore Jupyter Book build output
+_build/
+
+# Ignore Python bytecode and cache files
+__pycache__/
+*.py[cod]
+
+# Ignore environment files (if using virtualenv or conda)
+env/
+venv/
+.venv/
+conda_env.yaml
+*.env
+
+# Ignore log and metadata files
+*.log
+*.out
+*.err
+
+# Ignore temporary/backup files from various editors
+*.swp
+*.bak
+*.tmp
+*~
+
+# Ignore VSCode specific files
+.vscode/
+
+# Ignore macOS system files
+.DS_Store
+
+# Ignore Jupyter Book auxiliary files (optional, comment out if needed)
+_toc.yml.lock
+_config.yml.lock
+
+# Ignore any additional output files (if any custom build artifacts are produced)
+output/
+

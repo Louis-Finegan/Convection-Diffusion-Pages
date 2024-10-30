@@ -1,0 +1,10 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: pages/intro
+chapters:
+- file: pages/Transport_Equation
+- file: pages/Heat_Equation
+- file: pages/Fokker_Plank_equation
+- file: pages/Two_Dimensional_Models
