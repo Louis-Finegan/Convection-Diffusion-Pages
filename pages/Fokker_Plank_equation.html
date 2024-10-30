@@ -1,0 +1,854 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>One dimensional Fokker-Plank equation &#8212; Diffusion Convection Equation in Python</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js?v=f930bc37"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pages/Fokker_Plank_equation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Two Dimensional models" href="Two_Dimensional_Models.html" />
+    <link rel="prev" title="One Dimensional Heat Equation" href="Heat_Equation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Diffusion Convection Equation in Python - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="Diffusion Convection Equation in Python - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Diffusion Convection Equation
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="Transport_Equation.html">One Dimensional Transport equation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Heat_Equation.html">One Dimensional Heat Equation</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">One dimensional Fokker-Plank equation</a></li>
+
+
+
+
+
+
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="Two_Dimensional_Models.html">Two Dimensional models</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/Louis-Finegan/Convection-Diffusion-Models-Finite-Difference-Method-Python3" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/Louis-Finegan/Convection-Diffusion-Models-Finite-Difference-Method-Python3/issues/new?title=Issue%20on%20page%20%2Fpages/Fokker_Plank_equation.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/pages/Fokker_Plank_equation.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>One dimensional Fokker-Plank equation</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">One dimensional Fokker-Plank equation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-differential-equation">Stochastic Differential equation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#fokker-plank-equation">Fokker-Plank equation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-below">Example below</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-process">Stochastic Process</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#initialising-the-convection-diffusion-model">Initialising the Convection Diffusion Model</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-conditions">Boundary Conditions</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dirichlet">Dirichlet</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#neumann">Neumann</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-the-pde">Solving the PDE</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-first-time-step">Plotting the first time step</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#animating-the-solution">Animating the Solution</a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">load_ext</span> autoreload
+<span class="o">%</span><span class="k">autoreload</span> 2
+</pre></div>
+</div>
+</div>
+</div>
+<section id="one-dimensional-fokker-plank-equation">
+<h1>One dimensional Fokker-Plank equation<a class="headerlink" href="#one-dimensional-fokker-plank-equation" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">matplotlib</span> inline
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.animation</span> <span class="k">as</span> <span class="nn">animation</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">style</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s2">&quot;dark_background&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)))</span>
+
+<span class="kn">import</span> <span class="nn">diffuconpy</span> <span class="k">as</span> <span class="nn">dc</span>
+
+<span class="kn">import</span> <span class="nn">animations</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="stochastic-differential-equation">
+<h1>Stochastic Differential equation<a class="headerlink" href="#stochastic-differential-equation" title="Link to this heading">#</a></h1>
+<p>Let <span class="math notranslate nohighlight">\(X_t\)</span> be a Stochastic process and <span class="math notranslate nohighlight">\(\mu(X_t, t)\)</span> and <span class="math notranslate nohighlight">\(\sigma(X_t, t)^2\)</span> be measurable functions, called the drift and variance respectively. A Stochastic differential equation can be written as</p>
+<div class="math notranslate nohighlight">
+\[dX_t = \mu(X_t, t)dt + \sigma(X_t, t)dB_t\]</div>
+<p>such that <span class="math notranslate nohighlight">\(B_t\)</span> denotes a Wiener process (Standard Brownian Motion). Wiener process have the following properties</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(B_0 = 0\)</span> always.</p></li>
+<li><p>All <span class="math notranslate nohighlight">\(B_t\)</span> are independent random variables.</p></li>
+<li><p><span class="math notranslate nohighlight">\(B_{t+u} - B_{t} \sim N(0, u)\)</span>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(B_t\)</span> is a continuous random variable.</p></li>
+</ol>
+<p>The Stochastic differential equation can be solved numerically using the Euler-Maruyama Scheme.</p>
+<p>consider discrete time steps <span class="math notranslate nohighlight">\(\{t_i\}^N_{i=0}\)</span> such that <span class="math notranslate nohighlight">\(t_i - t_{i-1} = \Delta t\)</span>. <span class="math notranslate nohighlight">\(X_{t_{i}}\)</span> can be approximated by the following</p>
+<div class="math notranslate nohighlight">
+\[X_{t_{i}} = X_{t_{i-1}} + \mu(X_{t_{i-1}}, t_{i-1}) \Delta t + \sigma(X_{t_{i-1}}, t_{i-1}) \Delta B_{t_{i-1}}\]</div>
+<p>where <span class="math notranslate nohighlight">\(X_0 = x_0\)</span> and <span class="math notranslate nohighlight">\(\Delta B_{t_{i}} \sim N(0, \Delta t)\)</span>.</p>
+</section>
+<section id="fokker-plank-equation">
+<h1>Fokker-Plank equation<a class="headerlink" href="#fokker-plank-equation" title="Link to this heading">#</a></h1>
+<p>Let the diffusion coefficient <span class="math notranslate nohighlight">\(D(X_t, t) = \frac{1}{2}\sigma(X_t, t)\)</span> and p(x, t) be the probability density function of the random variable <span class="math notranslate nohighlight">\(X_t\)</span> at time <span class="math notranslate nohighlight">\(t\)</span>. <span class="math notranslate nohighlight">\(p\)</span> can be obtained by solving the Fokker-Plank equation, that is</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial}{\partial t}p(x, t) = - \frac{\partial}{\partial x}\left[\mu(x, t)p(x, t)\right] + \frac{\partial^2}{\partial x^2}\left[D(x, t)p(x, t)\right]\]</div>
+</section>
+<section id="example-below">
+<h1>Example below<a class="headerlink" href="#example-below" title="Link to this heading">#</a></h1>
+<p>In the following example, consider constant drift and diffusion. So the Stochastic Differential equation is of the form</p>
+<div class="math notranslate nohighlight">
+\[dX_t = \mu dt + \sqrt{2D} dB_t\]</div>
+<p>where <span class="math notranslate nohighlight">\(X_0 = x_0\)</span>.</p>
+<p>Let <span class="math notranslate nohighlight">\(p(x, t)\)</span> be the PDF of X_t at <span class="math notranslate nohighlight">\(t&gt;0\)</span>. <span class="math notranslate nohighlight">\(p\)</span> can be obtained from</p>
+<div class="math notranslate nohighlight">
+\[\frac{\partial}{\partial t}p(x, t) = -\mu \frac{\partial}{\partial x}p(x, t) + D\frac{\partial^2}{\partial x^2}p(x, t)\]</div>
+<p>Let</p>
+<ol class="arabic simple">
+<li><p><span class="math notranslate nohighlight">\(\mu = -0.1\)</span>, denoted by the variable name <code class="docutils literal notranslate"><span class="pre">Convection</span></code>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(D = 0.009\)</span>, denoted by the variable name <code class="docutils literal notranslate"><span class="pre">Diffusion</span></code>.</p></li>
+<li><p><span class="math notranslate nohighlight">\(X_0 = 0\)</span>, initial value of the SDE.</p></li>
+</ol>
+<p>The Fokker-Plank equation can be solved using the finite difference method for the convection-diffusion equation. See source code <code class="docutils literal notranslate"><span class="pre">diffuconpy</span></code> to see the full implementation of the finite-difference method. Click <a class="reference external" href="https://en.wikipedia.org/wiki/Fokker%E2%80%93Planck_equation">here</a> for more information on the Fokker-Plank equation.</p>
+</section>
+<section id="stochastic-process">
+<h1>Stochastic Process<a class="headerlink" href="#stochastic-process" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Diffusion</span> <span class="o">=</span> <span class="mf">0.009</span>
+<span class="n">Convection</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Ito Process model driven by standard Wiener process</span>
+
+<span class="c1"># number of simulations</span>
+<span class="n">nsim</span> <span class="o">=</span> <span class="mi">1000</span>
+
+<span class="c1"># Number of partitions</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">X_t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nsim</span><span class="p">,</span> <span class="n">N</span><span class="p">))</span>
+<span class="n">X_t</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># Initial value</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">N</span>
+
+<span class="n">mu_c</span> <span class="o">=</span> <span class="n">Convection</span>
+<span class="n">sigma_c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">Diffusion</span><span class="p">)</span>
+
+<span class="c1"># Drift</span>
+<span class="k">def</span> <span class="nf">mu</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">mu_c</span>
+
+<span class="c1"># Standard Deviation</span>
+<span class="k">def</span> <span class="nf">sigma</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">sigma_c</span>
+
+<span class="c1"># Brownian motion (denoted by B_t in the brief)</span>
+<span class="k">def</span> <span class="nf">dW</span><span class="p">(</span><span class="n">dt</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">dt</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nsim</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">t</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">t</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">dt</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">X_t</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span>
+        <span class="n">X_t</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">mu</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="n">dt</span> <span class="o">+</span> <span class="n">sigma</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="o">*</span><span class="n">dW</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">X_t</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;time (t)&quot;</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Random Variable $X_t$&quot;</span><span class="p">)</span>
+<span class="n">h</span><span class="o">.</span><span class="n">set_rotation</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/1d7b6197295768f81036f110463eaffb4742186c6533aa4e69003d563985dd47.png" src="../_images/1d7b6197295768f81036f110463eaffb4742186c6533aa4e69003d563985dd47.png" />
+</div>
+</div>
+<p>Thousands simulations of <span class="math notranslate nohighlight">\(X_t\)</span></p>
+</section>
+<section id="initialising-the-convection-diffusion-model">
+<h1>Initialising the Convection Diffusion Model<a class="headerlink" href="#initialising-the-convection-diffusion-model" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Number of space and time steps</span>
+<span class="n">Nt</span> <span class="o">=</span> <span class="mi">199</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="c1"># Space and time step size</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mi">0</span><span class="p">)</span><span class="o">/</span><span class="n">Nt</span>
+<span class="n">dx</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">-</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="n">Nx</span>
+
+<span class="c1"># Setting up the initial condition</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dx</span><span class="p">)</span>
+
+<span class="c1"># Initial Array</span>
+<span class="n">sigma</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">amp</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="c1"># Initial condition</span>
+<span class="n">init</span> <span class="o">=</span> <span class="n">amp</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.001</span><span class="o">*</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">((</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="mf">0.001</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="boundary-conditions">
+<h1>Boundary Conditions<a class="headerlink" href="#boundary-conditions" title="Link to this heading">#</a></h1>
+<section id="dirichlet">
+<h2>Dirichlet<a class="headerlink" href="#dirichlet" title="Link to this heading">#</a></h2>
+<p>The Dirichlet boundary conditions take the following form</p>
+<div class="math notranslate nohighlight">
+\[p(x_0, t) = p_0\]</div>
+<div class="math notranslate nohighlight">
+\[p(x_1, t) = p_1\]</div>
+<p>For all <span class="math notranslate nohighlight">\(t&gt;0\)</span> and boundary points <span class="math notranslate nohighlight">\(x_0\)</span> and <span class="math notranslate nohighlight">\(x_1\)</span>. In this example, let <span class="math notranslate nohighlight">\(p_0 = p_1 = 0\)</span>.</p>
+</section>
+<section id="neumann">
+<h2>Neumann<a class="headerlink" href="#neumann" title="Link to this heading">#</a></h2>
+<p>The Neumann boundary conditions are defined as</p>
+<div class="math notranslate nohighlight">
+\[p^{\prime}(x_0, t) = p^{\prime}_0\]</div>
+<div class="math notranslate nohighlight">
+\[p^{\prime}(x_1, t) = p^{\prime}_1\]</div>
+<p>For all <span class="math notranslate nohighlight">\(t&gt;0\)</span>. for this example, let <span class="math notranslate nohighlight">\(p^{\prime}_0 = p^{\prime}_1 = 0\)</span>, or say there is zero ‘flux’ in the boundary.</p>
+</section>
+</section>
+<section id="solving-the-pde">
+<h1>Solving the PDE<a class="headerlink" href="#solving-the-pde" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">Nt</span><span class="p">,</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">Diffusion</span><span class="p">,</span> <span class="n">Convection</span><span class="p">,</span> <span class="n">init</span><span class="p">):</span>
+    <span class="n">FokkerPlank</span> <span class="o">=</span> <span class="n">dc</span><span class="o">.</span><span class="n">convection_diffusion_1dims</span><span class="p">(</span><span class="n">Nt</span><span class="p">,</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">Diffusion</span><span class="p">,</span> <span class="n">Convection</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span>
+    <span class="n">sol_Dirichlet</span> <span class="o">=</span> <span class="n">FokkerPlank</span><span class="o">.</span><span class="n">solve_Dirichlet</span><span class="p">(</span><span class="n">boundary</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">sol_Neumann</span> <span class="o">=</span> <span class="n">FokkerPlank</span><span class="o">.</span><span class="n">solve_Neumann</span><span class="p">(</span><span class="n">boundary_flux</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">sol_Dirichlet</span><span class="o">.</span><span class="n">solution</span><span class="p">,</span> <span class="n">sol_Neumann</span><span class="o">.</span><span class="n">solution</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dirichlet</span><span class="p">,</span> <span class="n">neumann</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">Nt</span><span class="p">,</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">dx</span><span class="p">,</span> <span class="n">Diffusion</span><span class="p">,</span> <span class="n">Convection</span><span class="p">,</span> <span class="n">init</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="plotting-the-first-time-step">
+<h1>Plotting the first time step<a class="headerlink" href="#plotting-the-first-time-step" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Plotting the 0th time step state</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">))</span> <span class="c1"># left bound -5 and right bound 5</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dirichlet</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;pink&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Solution at the 0th time step&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Plotting the 0th time step state</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">ylim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">))</span> <span class="c1"># left bound -5 and right bound 5</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">neumann</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;pink&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Solution at the 0th time step&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;density&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/154666b83221723bbaeb9259e0fab4c78345c8dddb5056433cda7a86fbb4af36.png" src="../_images/154666b83221723bbaeb9259e0fab4c78345c8dddb5056433cda7a86fbb4af36.png" />
+<img alt="../_images/2af84da4463a52f2ca4b76ca810ee572e8c286e147afd5d39d82c101688165a0.png" src="../_images/2af84da4463a52f2ca4b76ca810ee572e8c286e147afd5d39d82c101688165a0.png" />
+</div>
+</div>
+</section>
+<section id="animating-the-solution">
+<h1>Animating the Solution<a class="headerlink" href="#animating-the-solution" title="Link to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Setting up the animation</span>
+<span class="n">FPS</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="n">FRN</span> <span class="o">=</span> <span class="mi">199</span>
+<span class="n">FILE_1</span> <span class="o">=</span> <span class="s1">&#39;./img/convection_diffusion_in_1_dimension_dirichlet.gif&#39;</span>
+<span class="n">FILE_2</span> <span class="o">=</span> <span class="s1">&#39;./img/convection_diffusion_in_1_dimension_neumann.gif&#39;</span>
+
+<span class="c1"># Animation of PDFs</span>
+<span class="n">animations</span><span class="o">.</span><span class="n">animation_1</span><span class="p">(</span>
+    <span class="n">solution</span><span class="o">=</span><span class="n">dirichlet</span><span class="p">,</span> 
+    <span class="n">X</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> 
+    <span class="n">xlab</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> 
+    <span class="n">ylab</span><span class="o">=</span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span> 
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Animation of PDF with Dirichlet BCs&#39;</span><span class="p">,</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;pink&#39;</span><span class="p">,</span> 
+    <span class="n">xlim_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> 
+    <span class="n">ylim_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span> 
+    <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">,</span> 
+    <span class="n">frn</span><span class="o">=</span><span class="n">FRN</span><span class="p">,</span> 
+    <span class="n">filename</span><span class="o">=</span><span class="n">FILE_1</span>
+    <span class="p">)</span>
+
+<span class="n">animations</span><span class="o">.</span><span class="n">animation_1</span><span class="p">(</span>
+    <span class="n">solution</span><span class="o">=</span><span class="n">neumann</span><span class="p">,</span> 
+    <span class="n">X</span><span class="o">=</span><span class="n">x</span><span class="p">,</span> 
+    <span class="n">xlab</span><span class="o">=</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> 
+    <span class="n">ylab</span><span class="o">=</span><span class="s1">&#39;PDF&#39;</span><span class="p">,</span> 
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Animation of PDF with Neumann BCs&#39;</span><span class="p">,</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;pink&#39;</span><span class="p">,</span> 
+    <span class="n">xlim_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> 
+    <span class="n">ylim_</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span> 
+    <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">,</span> 
+    <span class="n">frn</span><span class="o">=</span><span class="n">FRN</span><span class="p">,</span> 
+    <span class="n">filename</span><span class="o">=</span><span class="n">FILE_2</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="convection_diffusion_in_1_dimension_dirichlet.gif" src="../_images/convection_diffusion_in_1_dimension_dirichlet.gif" /></p>
+<p><img alt="convection_diffusion_in_1_dimension_neumann.gif" src="../_images/convection_diffusion_in_1_dimension_neumann.gif" /></p>
+<p>In both cases, the distribution starts from its initial state and under goes diffusion (gets squished) and drifts (convection) down the negative side of the axis.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">FILE_3</span> <span class="o">=</span> <span class="s1">&#39;./img/Ito_Process_Histogram_dirichlet.gif&#39;</span>
+<span class="n">FILE_4</span> <span class="o">=</span> <span class="s1">&#39;./img/Ito_Process_Histogram_neumann.gif&#39;</span>
+
+<span class="c1"># Animation of PDFs with histogram of Ito process</span>
+<span class="n">animations</span><span class="o">.</span><span class="n">animate_histogram</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">X_t</span><span class="p">,</span> 
+    <span class="n">solution</span><span class="o">=</span><span class="n">dirichlet</span><span class="p">,</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dx</span><span class="p">),</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+    <span class="n">interval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+    <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">xlab</span><span class="o">=</span><span class="s1">&#39;$X_t$&#39;</span><span class="p">,</span> 
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Histogram of Ito Process and PDF with Dirichlet BCs&#39;</span><span class="p">,</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span>
+    <span class="n">color_curve</span><span class="o">=</span><span class="s1">&#39;pink&#39;</span><span class="p">,</span>
+    <span class="n">fps</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> 
+    <span class="n">frn</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span> 
+    <span class="n">filename</span><span class="o">=</span><span class="n">FILE_3</span>
+    <span class="p">)</span>
+
+<span class="n">animations</span><span class="o">.</span><span class="n">animate_histogram</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">X_t</span><span class="p">,</span> 
+    <span class="n">solution</span><span class="o">=</span><span class="n">neumann</span><span class="p">,</span>
+    <span class="n">X</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">dx</span><span class="p">),</span>
+    <span class="n">bins</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+    <span class="n">interval</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> 
+    <span class="n">xlim</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="n">xlab</span><span class="o">=</span><span class="s1">&#39;$X_t$&#39;</span><span class="p">,</span> 
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Histogram of Ito Process and PDF with Neumann BCs&#39;</span><span class="p">,</span> 
+    <span class="n">color</span><span class="o">=</span><span class="s1">&#39;purple&#39;</span><span class="p">,</span>
+    <span class="n">color_curve</span><span class="o">=</span><span class="s1">&#39;pink&#39;</span><span class="p">,</span>
+    <span class="n">fps</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> 
+    <span class="n">frn</span><span class="o">=</span><span class="mi">201</span><span class="p">,</span> 
+    <span class="n">filename</span><span class="o">=</span><span class="n">FILE_4</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><img alt="Ito_Process_Histogram_dirichlet.gif" src="../_images/Ito_Process_Histogram_dirichlet.gif" /></p>
+<p><img alt="Ito_Process_Histogram_neumann.gif" src="../_images/Ito_Process_Histogram_neumann.gif" /></p>
+<p>The PDF modeled by the Fokker Plank equation approximates the distribution of data modeled by <span class="math notranslate nohighlight">\(1000\)</span> simulations of the Ito Process. Initially they do not match up, but sync up as each iteration goes on. This is due to the initial condition, saved in the variable <code class="docutils literal notranslate"><span class="pre">init</span></code>, is just an approximation of the Dirac delta function. so there is some (but very small) uncertainty at <span class="math notranslate nohighlight">\(t=0\)</span> according to the model. Unlike the simulations that have no uncertainty at <span class="math notranslate nohighlight">\(t =0\)</span>, because <span class="math notranslate nohighlight">\(X_0 = 0\)</span> and <span class="math notranslate nohighlight">\(B_0 = 0\)</span>.</p>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./pages"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="Heat_Equation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">One Dimensional Heat Equation</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="Two_Dimensional_Models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Two Dimensional models</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">One dimensional Fokker-Plank equation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-differential-equation">Stochastic Differential equation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#fokker-plank-equation">Fokker-Plank equation</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#example-below">Example below</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-process">Stochastic Process</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#initialising-the-convection-diffusion-model">Initialising the Convection Diffusion Model</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#boundary-conditions">Boundary Conditions</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dirichlet">Dirichlet</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#neumann">Neumann</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#solving-the-pde">Solving the PDE</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#plotting-the-first-time-step">Plotting the first time step</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#animating-the-solution">Animating the Solution</a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Louis Finegan
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
